@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Valentine ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.box { z-index: 10; }
+
+h1 {
+    font-size: 2.7em;
+    text-shadow: 0 0 15px #ff4b5c;
+}
+
+input {
+    padding: 12px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    text-align: center;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 25px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    border: none;
+    background: #ff4b5c;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover { background: #ff6f61; }
+
+#error {
+    display: none;
+    color: #ff2f4f;
+    margin-top: 10px;
+}
+
+.shake { animation: shake 0.4s; }
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+#secret {
+    display: none;
+    animation: zoom 1s ease;
+}
+
+@keyframes zoom {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* ❤️ INIMIOARE */
+.heart {
+    position: absolute;
+    font-size: 20px;
+    pointer-events: none;
+}
+
+/* 💥 EXPLOZIE */
+@keyframes explode {
+    0% { transform: translate(0,0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--x), var(--y)) scale(1.5); opacity: 0; }
+}
+
+/* 🌧️ CADERE */
+@keyframes fall {
+    0% { transform: translateY(-10vh); opacity: 1; }
+    100% { transform: translateY(110vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="box" id="login">
+    <h1>❤️ Pentru Iana ❤️</h1>
+    <p>Din ce dată suntem împreună?</p>
+    <input type="text" id="date">
+    <br>
+    <button id="enterBtn">Intră</button>
+    <div id="error">❌ Nu e corect 💔</div>
+</div>
+
+<div id="secret">
+    <h1>💖 Te iubesc, Iana 💖</h1>
+    <p>2 februarie va fi mereu special ✨</p>
+</div>
+
+<script>
+const colors = ['#ff4b5c','#ff6f61','#ff9a9e','#ffc3a0','#ffb6c1'];
+
+const input = document.getElementById("date");
+const error = document.getElementById("error");
+const login = document.getElementById("login");
+const secret = document.getElementById("secret");
+const enterBtn = document.getElementById("enterBtn");
+
+enterBtn.addEventListener("click", check);
+
+function check() {
+    if (input.value.trim().toLowerCase() === "2 februarie") {
+        login.style.display = "none";
+        secret.style.display = "block";
+        explodeHearts();
+        setTimeout(fallingHearts, 800);
+    } else {
+        input.classList.add("shake");
+        error.style.display = "block";
+        setTimeout(() => {
+            input.classList.remove("shake");
+            error.style.display = "none";
+        }, 1500);
+    }
+}
+
+/* 💥 EXPLOZIE DIN CENTRU */
+function explodeHearts() {
+    for (let i = 0; i < 150; i++) {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.innerHTML = "❤️";
+        h.style.left = "50vw";
+        h.style.top = "50vh";
+        h.style.color = colors[Math.floor(Math.random()*colors.length)];
+        h.style.fontSize = (10 + Math.random()*30) + "px";
+
+        const x = (Math.random() - 0.5) * 600 + "px";
+        const y = (Math.random() - 0.5) * 600 + "px";
+        h.style.setProperty("--x", x);
+        h.style.setProperty("--y", y);
+
+        h.style.animation = "explode 1s ease-out forwards";
+        document.body.appendChild(h);
+
+        setTimeout(() => h.remove(), 1000);
+    }
+}
+
+/* 🌧️ CAD INIMIOARE */
+function fallingHearts() {
+    for (let i = 0; i < 200; i++) {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.innerHTML = "❤️";
+        h.style.left = Math.random()*100 + "vw";
+        h.style.color = colors[Math.floor(Math.random()*colors.length)];
+        h.style.fontSize = (10 + Math.random()*30) + "px";
+        h.style.animation = `fall ${5 + Math.random()*7}s linear infinite`;
+        document.body.appendChild(h);
+    }
+}
+
+/* 📱 INIMIOARE LA ATINGERE / CLICK */
+document.addEventListener("touchstart", function(e) {
+    const touch = e.touches[0];
+    heartBurst(touch.clientX, touch.clientY);
+});
+document.addEventListener("click", function(e) {
+    heartBurst(e.clientX, e.clientY);
+});
+
+function heartBurst(x, y) {
+    for (let i = 0; i < 15; i++) {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.innerHTML = "❤️";
+        h.style.left = x + "px";
+        h.style.top = y + "px";
+        h.style.position = "absolute";
+        h.style.color = colors[Math.floor(Math.random()*colors.length)];
+        h.style.fontSize = (12 + Math.random()*20) + "px";
+
+        const dx = (Math.random() - 0.5) * 200 + "px";
+        const dy = (Math.random() - 0.5) * 200 + "px";
+        h.style.setProperty("--x", dx);
+        h.style.setProperty("--y", dy);
+
+        h.style.animation = "explode 0.8s ease-out forwards";
+        document.body.appendChild(h);
+
+        setTimeout(() => h.remove(), 800);
+    }
+}
+</script>
+
+</body>
+</html>
+
